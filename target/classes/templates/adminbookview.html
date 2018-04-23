@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="author" content="Codecool" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Three Little Pigs Library</title>
+
+    <link rel="icon" href="http://pngimg.com/uploads/book/book_PNG2118.png"/>
+
+    <!-- Latest compiled and minified Jquery -->
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous" />
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous" />
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+
+    <script src="/js/script.js" defer=""></script>
+
+    <link rel="stylesheet" type="text/css" href="/css/custom.css" />
+</head>
+
+<body>
+
+<div th:replace="header :: copy"></div>
+
+<div class="container">
+    <div class="row">
+        <form action="/editbook" method="post">
+            <input type="hidden" name="bookId" th:value="${book.getId()}"/>
+            <input class="btn btn-default" type="submit" value="Edit book" />
+        </form>
+        <hr/>
+        <div class="col-md-3">
+            <img th:src="${book.getPicture_url()}" class="avatar img-rounded" alt="avatar"/>
+        </div>
+        <div class="col-lg-8">
+            <p th:text="${book.getTitle()}"></p>
+            <p>Written by <span th:text="${book.author}">Author</span></p>
+            <p th:text="${book.getDescription()}">Description</p>
+        </div>
+    </div><br/>
+    <div>
+        <br/>
+    </div>
+    <div class="row col-lg-6">
+        <table class="table">
+            <tr>
+                <th>Reserved By</th>
+                <th>
+                    <div>
+                        <form method="post">
+                            <input type="hidden" id="isbn" name="isbn" th:value="${book.getIsbn()}"/>
+                            <input type="hidden" id="id" name="id" th:value="${reservedById}"/>
+                            <input type="hidden" id="reservedBy" name="reservedBy" th:value="${reservedByName}"/>
+                            <div th:if="${book.getReservedBy() != null and book.getRentedBy() == null}  ">
+                                <input type="submit" id="rent" name="rent" class="btn btn-default pull-right" value="Rent book" />
+                            </div>
+                            <div th:unless="${book.getReservedBy() != null and book.getRentedBy() == null}">
+                                <input type="submit" id="rent" name="rent" class="btn btn-default pull-right" value="Rent book" disabled="disabled"/>
+                            </div>
+                        </form>
+                    </div>
+                </th>
+                <th>
+                    <form action="/cancelReservation" method="post">
+                        <input type="hidden" name="isbn" th:value="${book.getIsbn()}"/>
+                        <input type="hidden" name="cancel" value="cancel"/>
+                        <input type="hidden" name="id" th:value="${reservedById}"/>
+                        <div th:if="${book.getReservedBy() != null}">
+                            <input type="submit" id="cancel" class="btn btn-default pull-right" value="Cancel reservation" />
+                        </div>
+                        <div th:unless="${book.getReservedBy() != null}">
+                            <input type="submit" id="cancel" class="btn btn-default pull-right" value="Cancel reservation" disabled="disabled"/>
+                        </div>
+                    </form>
+                </th>
+            </tr>
+            <tr>
+                <td id="displayReservedBy" th:text="${reservedByName}">reserved by</td>
+            </tr>
+        <br/>
+        </table>
+        <table class="table">
+            <tr>
+                <th>Rented By</th>
+                <th>
+                    <form method="post">
+                        <input type="hidden" name="isbn" th:value="${book.getIsbn()}"/>
+                        <input type="hidden" name="id" th:value="${rentedById}"/>
+                        <input type="hidden" id="possibleReservation" th:value="${reservedByName}"/>
+                        <div th:if="${book.getRentedBy() != null}">
+                            <input type="submit" id="return" name="return" class="btn btn-default pull-right" value="Return book" />
+                        </div>
+                        <div th:unless="${book.getRentedBy() != null}">
+                            <input type="submit" id="return" name="return" class="btn btn-default pull-right" value="Return book" disabled="disabled"/>
+                        </div>
+                    </form>
+                </th>
+                <th></th>
+            </tr>
+            <tr>
+                <td id="displayRentedBy" th:text="${rentedByName}">rented by</td>
+            </tr>
+        </table>
+
+        <tr>
+            <td>
+                <div>
+                    <a class="btn btn-primary" href="/">Back</a>
+                </div>
+            </td>
+        </tr>
+    </div>
+</div>
+
+<div th:replace="footer :: copy"></div>
+
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="copy">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">
+                    <span> <strong>Three Little Pigs</strong></span>
+                    <div></div>
+                    <img id="brand" alt="Brand" src="http://www.yim778.com/data/out/236/1356788.png" height="35px"/>
+                </a>
+            </div>
+            <br/>
+
+            <!--user name, guest user -->
+
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown" th:if="${user_id!=0}">
+                    <a id="refToUserInfo" href="#" th:href="@{//0.0.0.0:8080/userprofile/{id}(id=${user_id})}">
+                        <span class="glyphicon glyphicon-user"></span> 
+                        <strong id="displayUserName" th:text="${userName}">Hello, user!</strong>
+                    </a>
+                </li>
+                <li class="dropdown" th:unless="${user_id!=0}">
+                    <a id="refToUserInfo" href="/">
+                        <span class="glyphicon glyphicon-user"></span> 
+                        <span id="displayUserName">Hello, Guest!</span>
+                    </a>
+                </li>
+            </ul>
+
+            <form class="navbar-form navbar-right" action="/search" role="search">
+                <div class="form-group">
+                    <input type="text" name="search" class="form-control" placeholder="Search"></input>
+                </div>
+                <button type="submit" class="btn btn-default">Search</button>
+                <div></div>
+            </form>
+
+            <div class="navbar-right" th:if="${user_id == 0}">
+                <button class="btn btn-default" id="reglogbutton" data-toggle="modal" data-target="#myLoginModal">Register / Login</button>
+            </div>
+            <div class="navbar-right" id="reglogbutton" th:unless="${user_id == 0}">
+                <form action="/logout" method="post">
+                    <button class="btn btn-default">Logout</button>
+                </form>
+            </div>
+
+            <div class="navbar-right">
+                <form action="/logout" method="post">
+                    <button type="submit" class="btn btn-default" id="logoutbutton" style="display: none">Logout</button>
+                </form>
+            </div>
+
+        </div>
+    </nav>
+
+    <div class="modal fade" id="myLoginModal" role="dialog">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </button>
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a data-toggle="tab" href="#login-form"> Login <span class="glyphicon glyphicon-user"></span></a></li>
+                        <li><a data-toggle="tab" href="#registration-form"> Register <span class="glyphicon glyphicon-pencil"></span></a></li>
+                    </ul>
+                </div>
+                <div class="modal-body">
+                    <div class="tab-content">
+                        <div id="login-form" class="tab-pane fade in active">
+                            <form name="login" action="/login" method="post" id="login">
+                                <div class="form-group">
+                                    <label for="logusername">Username:</label>
+                                    <input type="text" class="form-control" id="logusername" placeholder="Enter username" name="logusername" required="required"></input>
+                                </div>
+                                <div class="form-group">
+                                    <label for="pwd">Password:</label>
+                                    <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="pwd" required="required"></input>
+                                </div>
+                                <button id="loginButton" type="button" class="btn btn-default">Login</button>
+                            </form>
+                        </div>
+                        <div id="registration-form" class="tab-pane fade">
+                            <form name="register" method="post" id="register">
+                                <div class="form-group">
+                                    <label for="username">Your Username:</label>
+                                    <input type="text" class="form-control" id="username" placeholder="Enter your chosen username" name="username" required="required"></input>
+                                </div>
+                                <div class="form-group">
+                                    <label for="firstname">Your Firstname:</label>
+                                    <input type="text" class="form-control" id="firstname" placeholder="Enter your firstname" name="firstname" required="required"></input>
+                                </div>
+                                <div class="form-group">
+                                    <label for="lastname">Your Lastname:</label>
+                                    <input type="text" class="form-control" id="lastname" placeholder="Enter your lastname" name="lastname" required="required"></input>
+                                </div>
+                                <div class="form-group">
+                                    <label for="address">Your Address:</label>
+                                    <input type="text" class="form-control" id="address" placeholder="Enter your address" name="address" required="required"></input>
+                                </div>
+                                <div class="form-group">
+                                    <label for="newemail">Email:</label>
+                                    <input type="email" class="form-control" id="newemail" placeholder="Enter your email address" name="newemail" required="required"></input>
+                                </div>
+                                <div class="form-group">
+                                    <label for="phonenum">Your Phone Number:</label>
+                                    <input type="text" class="form-control" id="phonenum" placeholder="Enter your phone number" name="phonenum" required="required"></input>
+                                </div>
+                                <div class="form-group">
+                                    <label for="dateOfBirth">Your Date of Birth:</label>
+                                    <input type="date" class="form-control" id="dateOfBirth" placeholder="Enter your date of birth" name="dateOfBirth" required="required"></input>
+                                </div>
+                                <div class="form-group">
+                                    <label for="newpwd">Password:</label>
+                                    <input type="password" class="form-control" id="newpwd" placeholder="New password" name="newpwd" required="required"></input>
+                                </div>
+                                <div class="form-group">
+                                    <label for="newpwd2">Your Password again:</label>
+                                    <input type="password" class="form-control" id="newpwd2" onkeyup="checkPass(); return false;" placeholder="Your password again" name="newpwd2"></input>
+                                    <span id="confirmMessage" class="confirmMessage"></span>
+                                </div>
+                                <button id="register-button" type="button" name="register" class="register btn btn-default" style="display: none">Register</button>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+                <!--                                    <div class="modal-footer">-->
+                <!--                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>-->
+                <!--                                    </div>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"></link>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+
+</body>
+</html>
